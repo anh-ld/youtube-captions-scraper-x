@@ -1,19 +1,18 @@
 {
-  "name": "youtube-captions-scraper",
+  "name": "youtube-captions-scraper-x",
   "version": "1.0.3",
-  "description": "Scrap youtube auto-generated captions",
+  "description": "Scrape Youtube captions",
   "main": "dist/index.js",
   "author": {
-    "name": "Algolia, Inc.",
-    "url": "https://www.algolia.com"
+    "name": "Le Duy Anh"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/algolia/youtube-captions-scraper.git"
+    "url": "https://github.com/culee/youtube-captions-scraper-x.git"
   },
-  "homepage": "https://github.com/algolia/youtube-captions-scraper",
+  "homepage": "https://github.com/culee/youtube-captions-scraper-x",
   "bugs": {
-    "url": "https://github.com/algolia/youtube-captions-scraper/issues"
+    "url": "https://github.com/culee/youtube-captions-scraper-x/issues"
   },
   "license": "MIT",
   "scripts": {
