@@ -2,7 +2,6 @@
 
 import he from 'he';
 import striptags from 'striptags';
-import { JSDOM } from 'jsdom';
 import fetch from 'node-fetch';
 
 type SubtitleOption = {
@@ -11,18 +10,19 @@ type SubtitleOption = {
 };
 
 export async function getSubtitles({ videoID, lang = 'en' }: SubtitleOption) {
-  const dom = await JSDOM.fromURL(
+  // * fetch html text of youtube mobile page
+  const ytHtmlResponse = await fetch(
     `https://youtube.com/watch?v=${videoID}&persist_app=1&app=m`
   );
-
-  const serializedDom = dom.serialize();
+  const ytHtmlPlainText = await ytHtmlResponse.text();
 
   // * ensure we have access to captions data
-  if (!serializedDom.includes('captionTracks'))
+  if (!ytHtmlPlainText.includes('captionTracks'))
     throw new Error(`Could not find captions for video: ${videoID}`);
 
+  // * find subtitle object
   const regex = /({"captionTracks":.*isTranslatable":(true|false)}])/;
-  const [match] = regex.exec(serializedDom);
+  const [match] = regex.exec(ytHtmlPlainText);
   const { captionTracks } = JSON.parse(`${match}}`);
 
   const subtitle =
@@ -34,9 +34,15 @@ export async function getSubtitles({ videoID, lang = 'en' }: SubtitleOption) {
   if (!subtitle || (subtitle && !subtitle.baseUrl))
     throw new Error(`Could not find ${lang} captions for ${videoID}`);
 
-  const xmlData = await fetch(`https://www.youtube.com${subtitle.baseUrl}`);
+  // * fetch subtitle data
+  const subtitleUrl = subtitle.baseUrl.includes('youtube.com')
+    ? subtitle.baseUrl
+    : `https://www.youtube.com${subtitle.baseUrl}`;
+
+  const xmlData = await fetch(subtitleUrl);
   const transcript = await xmlData.text();
 
+  // * filter subtile data
   const lines = transcript
     .replace('<?xml version="1.0" encoding="utf-8" ?><transcript>', '')
     .replace('</transcript>', '')
