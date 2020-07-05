@@ -10,7 +10,7 @@ Based on the original [youtube-captions-scraper](https://github.com/algolia/yout
 ## Usage
 
 ```js
-import { getSubtitles } from 'youtube-captions-scraper';
+const { getSubtitles } = require('youtube-captions-scraper-x');
 
 (async function() {
   const captions = await getSubtitles({ videoID: 'mw5VIEIvuMI', lang: 'ja' })
